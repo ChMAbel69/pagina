@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Consulta de Reportes</title>
+</head>
+<body>
+
+<h2>Subir reporte</h2>
+
+<input type="file" id="file"><br><br>
+
+<select id="reporte">
+  <option value="">-- Selecciona un reporte --</option>
+  <option value="pronosticos">Pronósticos</option>
+  <option value="especialidad">Especialidad</option>
+  <option value="cts">Reporte CT</option>
+  <option value="paros">Paros</option>
+</select>
+<input type="text" id="semana" placeholder="semana"><br><br>
+<input type="text" id="anio" placeholder="anio"><br><br>
+
+<button onclick="enviar()">Consultar</button>
+
+<pre id="resultado"></pre>
+
+<script>
+async function enviar() {
+	const fileInput = document.getElementById("file").files[0];
+	const reporte = document.getElementById("reporte").value;
+	const semana = document.getElementById("semana").value;
+	const anio = document.getElementById("anio").value;
+	
+	const formData = new FormData();
+	formData.append("file", fileInput);
+	formData.append("reporte", reporte);
+	if (semana) formData.append("semana", parseInt(semana));
+	if (anio) formData.append("anio", parseInt(anio));
+	
+	if (!reporte) {
+	alert("Selecciona un reporte");
+	return;
+}
+	const res = await fetch("http://localhost:8000/consultar",{
+		method: "POST",
+		body: formData
+	});
+	
+	const data = await res.json();
+
+	console.log(data); // 🔥 debug
+
+	mostrarTablas(data.data);
+}
+
+
+function mostrarTablas(data){
+	const contenedor = document.getElementById("resultado");
+	contenedor.innerHTML = "";
+
+	for (let nombre in data){
+
+		const contenido = data[nombre];
+		const df = contenido.df;
+		const reportes = contenido.reportes;
+
+		// 🔹 título del df
+		const titulo = document.createElement("h2");
+		titulo.textContent = nombre;
+		contenedor.appendChild(titulo);
+
+		// 🔹 tabla del DF
+		if (!df || df.length === 0){
+			contenedor.innerHTML += "<p>Sin datos</p>";
+		} else {
+			renderTabla(df, contenedor);
+		}
+
+		// 🔥 REPORTES
+		if (reportes){
+			const subtitulo = document.createElement("h3");
+			subtitulo.textContent = "Reportes";
+			contenedor.appendChild(subtitulo);
+
+			for (let rep in reportes){
+				const repData = reportes[rep];
+
+				const repTitle = document.createElement("h4");
+				repTitle.textContent = rep;
+				contenedor.appendChild(repTitle);
+
+				if (Array.isArray(repData)){
+					renderTabla(repData, contenedor);
+				} else {
+					const p = document.createElement("p");
+					p.textContent = repData;
+					contenedor.appendChild(p);
+				}
+			}
+		}
+	}
+}
+function renderTabla(df, contenedor){
+	const tabla = document.createElement("table");
+	tabla.border = "1";
+
+	const thead = document.createElement("thead");
+	const rowHead = document.createElement("tr");
+
+	Object.keys(df[0]).forEach(col => {
+		const th = document.createElement("th");
+		th.textContent = col;
+		rowHead.appendChild(th);
+	});
+
+	thead.appendChild(rowHead);
+	tabla.appendChild(thead);
+
+	const tbody = document.createElement("tbody");
+
+	df.forEach(fila => {
+		const tr = document.createElement("tr");
+
+		Object.values(fila).forEach(val => {
+			const td = document.createElement("td");
+			td.textContent = val;
+			tr.appendChild(td);
+		});
+
+		tbody.appendChild(tr);
+	});
+
+	tabla.appendChild(tbody);
+	contenedor.appendChild(tabla);
+}
+</script>
+</body>
+</html>
