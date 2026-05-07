@@ -22,7 +22,38 @@
 <button onclick="enviar()">Consultar</button>
 
 <pre id="resultado"></pre>
+<style>
 
+table{
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 30px;
+    font-family: Arial;
+}
+
+th{
+    background-color: #001f3f; /* azul marino */
+    color: white;
+    padding: 8px;
+    text-align: center;
+    font-weight: bold;
+}
+
+td{
+    padding: 6px;
+    text-align: center;
+}
+
+tr:nth-child(even){
+    background-color: #f2f2f2;
+}
+
+tr:hover{
+    background-color: #d9edf7;
+}
+
+</style>
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 <script>
 async function enviar() {
 	const fileInput = document.getElementById("file").files[0];
@@ -99,9 +130,31 @@ function mostrarTablas(data){
 		}
 	}
 }
+async function copiarComoImagen(tabla){
+
+    const canvas = await html2canvas(tabla);
+
+    canvas.toBlob(async (blob) => {
+
+        await navigator.clipboard.write([
+            new ClipboardItem({
+                "image/png": blob
+            })
+        ]);
+
+        alert("Tabla copiada como imagen");
+
+    });
+}
 function renderTabla(df, contenedor){
 	const tabla = document.createElement("table");
 	tabla.border = "1";
+	 const boton = document.createElement("button");
+    boton.textContent = "Copiar imagen";
+
+    boton.onclick = () => copiarComoImagen(tabla);
+
+    contenedor.appendChild(boton);
 
 	const thead = document.createElement("thead");
 	const rowHead = document.createElement("tr");
@@ -120,11 +173,27 @@ function renderTabla(df, contenedor){
 	df.forEach(fila => {
 		const tr = document.createElement("tr");
 
-		Object.values(fila).forEach(val => {
-			const td = document.createElement("td");
-			td.textContent = val;
-			tr.appendChild(td);
-		});
+		Object.entries(fila).forEach(([col, val]) => {
+
+    	const td = document.createElement("td");
+   	 	td.textContent = val;
+
+    	if(col === "Dias Paros"){
+
+        if(val > 10){
+            td.style.backgroundColor = "#ff0000"; // rojo
+            td.style.color = "white";
+        }
+
+        else if(val >= 7){
+            td.style.backgroundColor = "#ff6400"; // naranja
+        }
+
+        else if(val >= 3){
+            td.style.backgroundColor = "#ffff00"; // amarillo
+        }}
+
+   		 tr.appendChild(td);});
 
 		tbody.appendChild(tr);
 	});

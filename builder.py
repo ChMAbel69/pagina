@@ -8,7 +8,7 @@ class  dfbuilder:
     self.config = config
     self.semana = semana
     self.columnas_eliminar = columnas_eliminar or {}
-    self.hoy = pd.to_datetime(date.today())
+    self.hoy = pd.Timestamp.today().normalize()
     self.ops = dfops()
 
   def filter(self, df, semana=None, anio=None, func=None, **kwargs):
@@ -174,3 +174,29 @@ class dfops:
         .reset_index(name=f"media_{columna}"))
 
     return media
+  def diferencia_conteos(self, df,
+                       semana=None,
+                       anio=None,
+                       func_a=None,
+                       func_b=None,
+                       **kwargs):
+
+    if func_a is None or func_b is None:
+        raise ValueError("Se requieren ambos filtros")
+
+    total_a = len(func_a(df, semana, anio))
+    total_b = len(func_b(df, semana, anio))
+
+    return total_a - total_b
+
+  
+  def contar_filtrado(self, df, semana=None, anio=None,
+                     func=None,
+                     **kwargs):
+
+    if func is None:
+        raise ValueError("Se requiere func")
+
+    df_filtrado = func(df, semana, anio)
+
+    return len(df_filtrado)

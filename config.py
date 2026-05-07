@@ -60,7 +60,7 @@ columnas_eliminar = {'df_obra_pron':['Fecha Real Inicio OC','Tipo Cimentación',
                    ,'TC General Objetivo','TC General','TC Objetivo dias','Fecha Plan Inicio AC','Dias Acumulados Al Dia de Hoy CT','TC Proyectado CT'
                    ,'TC Proyectado','Fecha Proyectada','Dias Restantes','Festivos General','Climana General','Fecha Ultima Check Real',
                  'num sem okct','Fecha CT Plan']
-          ,'paros':['Tipo Cimentación','Festivos','Festivos General','Fecha Repro Original Ultima Acticidad','Dia Real','Estatus','Estatus Dias',
+          ,'paros':['Proyecto','Tipo Cimentación','Festivos','Festivos General','Fecha Repro Original Ultima Acticidad','Dia Real','Estatus','Estatus Dias',
     'Fecha Plan Inicio OC','Fecha Repro Dinamica Dia Ultima Actividad',
     'Clima Total OC sin validar','TC Objetivo OC','TC Proyectado OC',
     'Fecha Termino Primera Actividad OC','Fecha Termino Ultima Actividad OC',
@@ -219,19 +219,41 @@ config = {'cts':{'requires':{
                              {'step':'transform',
                               'func':'contar_dias',
                               'args':{'col_rango':'rango',
-                                      'col_festivos':'Festivos',
                                       'col_resultado':'Dias Paros'}},
+                             {'step':'report',
+                              'func':'contar_filtrado',
+                              'args':{
+     'func': lambda df, semana, anio: df[
+         (df['SEM CT'].isna()) &
+         (df['Ultima Actividad Avanzada'] != 'OK CT') &
+         (df['Fecha Ultima Check Real'].notna()) &
+         (df['Fecha Ultima Check Real'].dt.isocalendar().year == anio)]}},
+                             {'step':'report',
+                              'func':'diferencia_conteos',
+                              'args':{
+     'func_a': lambda df, semana, anio: df[
+         (df['SEM CT'].isna()) &
+         (df['Ultima Actividad Avanzada'] != 'OK CT') &
+         (df['Fecha Ultima Check Real'].notna()) &
+         (df['Fecha Ultima Check Real'].dt.isocalendar().year == anio)],
+     'func_b': lambda df, semana, anio: df[
+         (df['Dias Paros'] > 3) &
+         (df['SEM CT'].isna()) &
+         (df['Ultima Actividad Avanzada'] != 'OK CT') &
+         (df['Fecha Ultima Check Real'].notna()) &
+         (df['Fecha Ultima Check Real'].dt.isocalendar().year == anio)
+     ]}},
                              {'step':'transform',
                               'func':'filter',
                               'args':{'func': lambda df,semana, anio: df[
                                   (df['Dias Paros'] > 3) & (df['SEM CT'].isna()) & (df['Ultima Actividad Avanzada'] != 'OK CT') & (df['Fecha Ultima Check Real'].notna()) & (df['Fecha Ultima Check Real'].dt.isocalendar().year == anio)
                               ]}},
                              {'step':'transform',
-                              'func':'drop_columnas',
-                              'args':{'key':'paros'}},
-                             {'step':'transform',
                               'func':'ordenar',
-                              'args':{'columna':'Fecha Ultima Check Real'}}]}},
+                              'args':{'columna':'Fecha Ultima Check Real'}},
+                             {'step':'transform',
+                              'func':'drop_columnas',
+                              'args':{'key':'paros'}}]}},
           'pronosticos':{'requires':{'semana':True,'anio':True},'Pronostico OC':{'pipeline':[
                              {'step':'transform',
                               'func':'limpiar_fechas',
