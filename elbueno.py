@@ -8,7 +8,10 @@ from config import config
 from config import columnas_eliminar
 from builder import dfbuilder
 from builder import dfops
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 app = FastAPI()
+app.mount("/static", StaticFiles(directory="static"), name="static")
 import uvicorn
 
 if __name__ == "__main__":
@@ -21,6 +24,10 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.get("/")
+async def home():
+    return FileResponse("static/index.html")
 
 @app.post("/consultar")
 async def realizar_consulta(file: UploadFile = File(...),

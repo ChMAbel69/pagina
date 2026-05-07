@@ -71,7 +71,7 @@ async function enviar() {
 	alert("Selecciona un reporte");
 	return;
 }
-	const res = await fetch("/consultar",{
+	const res = await fetch("http://localhost:8000/consultar",{
 		method: "POST",
 		body: formData
 	});
