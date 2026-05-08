@@ -29,6 +29,7 @@ table{
     width: 100%;
     margin-bottom: 30px;
     font-family: Arial;
+	table-layout: fixed;
 }
 
 th{
@@ -42,6 +43,9 @@ th{
 td{
     padding: 6px;
     text-align: center;
+	border: 1px solid #ccc;
+	word-wrap: break-word;
+	white-space: normal;
 }
 
 tr:nth-child(even){
@@ -184,6 +188,7 @@ function renderTabla(df, contenedor){
     		col === "Lote" ||
     		col === "Fecha Ultima Check Real"
 		){
+			td.style.width = "90px";
     		td.style.maxWidth = "90px";
     		td.style.whiteSpace = "normal";
     		td.style.wordWrap = "break-word";
