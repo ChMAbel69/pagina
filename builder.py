@@ -84,7 +84,8 @@ class  dfbuilder:
         return df
 
     df[col_resultado] = df[col_rango].apply(
-        lambda x: sum(d.dayofweek != 6 for d in x) if isinstance(x, list) else 0
+        lambda x: max(sum(d.dayofweek != 6 for d in x) -1,0)
+          if isinstance(x, list) else 0
     )
 
     if col_festivos:

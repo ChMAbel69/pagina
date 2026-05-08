@@ -177,6 +177,17 @@ function renderTabla(df, contenedor){
 
     	const td = document.createElement("td");
    	 	td.textContent = val;
+		
+		if(
+    		col === "Modelo" ||
+    		col === "Manzana" ||
+    		col === "Lote" ||
+    		col === "Fecha Ultima Check Real"
+		){
+    		td.style.maxWidth = "90px";
+    		td.style.whiteSpace = "normal";
+    		td.style.wordWrap = "break-word";
+		}	
 
     	if(col === "Dias Paros"){
 
