@@ -26,26 +26,28 @@
 
 table{
     border-collapse: collapse;
-    width: 100%;
     margin-bottom: 30px;
     font-family: Arial;
-	table-layout: fixed;
 }
 
 th{
-    background-color: #001f3f; /* azul marino */
+    background-color: #001f3f;
     color: white;
     padding: 8px;
     text-align: center;
     font-weight: bold;
+
+    border: 1px solid #ccc;
+    white-space: normal;
+    overflow-wrap: break-word;
 }
 
 td{
     padding: 6px;
     text-align: center;
 	border: 1px solid #ccc;
-	word-wrap: break-word;
 	white-space: normal;
+	overflow-wrap: break-word;
 }
 
 tr:nth-child(even){
@@ -166,6 +168,29 @@ function renderTabla(df, contenedor){
 	Object.keys(df[0]).forEach(col => {
 		const th = document.createElement("th");
 		th.textContent = col;
+		if(
+    		col === "Fecha Ultima Check Real" ||
+			col === "Ultima Actividad Avanzada"
+		){
+    		th.style.maxWidth = "130px";
+    		th.style.whiteSpace = "normal";
+    		th.style.wordWrap = "break-word";
+		}	
+		else if(
+			col === "Modelo"
+		){
+    		th.style.maxWidth = "120px";
+    		th.style.whiteSpace = "normal";
+    		th.style.wordWrap = "break-word";
+		}
+		else if(
+			col === "Lote" ||
+			col === "Manzana"
+		){
+    		th.style.maxWidth = "50";
+    		th.style.whiteSpace = "normal";
+    		th.style.wordWrap = "break-word";
+		}
 		rowHead.appendChild(th);
 	});
 
@@ -183,17 +208,28 @@ function renderTabla(df, contenedor){
    	 	td.textContent = val;
 		
 		if(
-    		col === "Modelo" ||
-    		col === "Manzana" ||
-    		col === "Lote" ||
-    		col === "Fecha Ultima Check Real"
+    		col === "Fecha Ultima Check Real" ||
+			col === "Ultima Actividad Avanzada"
 		){
-			td.style.width = "90px";
-    		td.style.maxWidth = "90px";
+    		td.style.maxWidth = "130px";
     		td.style.whiteSpace = "normal";
     		td.style.wordWrap = "break-word";
 		}	
-
+		else if(
+			col === "Modelo"
+		){
+    		td.style.maxWidth = "120px";
+    		td.style.whiteSpace = "normal";
+    		td.style.wordWrap = "break-word";
+		}
+		else if(
+			col === "Lote" ||
+			col === "Manzana"
+		){
+    		td.style.maxWidth = "50";
+    		td.style.whiteSpace = "normal";
+    		td.style.wordWrap = "break-word";
+		}
     	if(col === "Dias Paros"){
 
         if(val > 10){
