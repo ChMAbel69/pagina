@@ -237,7 +237,7 @@ config = {'cts':{'requires':{
          (df['Fecha Ultima Check Real'].notna()) &
          (df['Fecha Ultima Check Real'].dt.isocalendar().year == anio)],
      'func_b': lambda df, semana, anio: df[
-         (df['Dias Paros'] > 3) &
+         (df['Dias Paros'] > 2) &
          (df['SEM CT'].isna()) &
          (df['Ultima Actividad Avanzada'] != 'OK CT') &
          (df['Fecha Ultima Check Real'].notna()) &
@@ -246,7 +246,7 @@ config = {'cts':{'requires':{
                              {'step':'transform',
                               'func':'filter',
                               'args':{'func': lambda df,semana, anio: df[
-                                  (df['Dias Paros'] > 3) & (df['SEM CT'].isna()) & (df['Ultima Actividad Avanzada'] != 'OK CT') & (df['Fecha Ultima Check Real'].notna()) & (df['Fecha Ultima Check Real'].dt.isocalendar().year == anio)
+                                  (df['Dias Paros'] > 2) & (df['SEM CT'].isna()) & (df['Ultima Actividad Avanzada'] != 'OK CT') & (df['Fecha Ultima Check Real'].notna()) & (df['Fecha Ultima Check Real'].dt.isocalendar().year == anio)
                               ]}},
                              {'step':'transform',
                               'func':'ordenar',
