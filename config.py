@@ -113,7 +113,7 @@ config = {'cts':{'requires':{
                              {'step':'transform',
                               'func':'filter',
                               'args':{'func': lambda df, semana, anio: df[
-                                  (df['num sem okct'] == semana) & (df['Ultima Actividad Avanzada'] == "OK CT") & (df['Fecha Ultima Check Real'].dt.isocalendar().year == anio)
+                                  (df['num sem okct'] == semana) & ((df['Ultima Actividad Avanzada'] == "OK CT") or (df['Ultima Actividad Avanzada'] =='OK CL')) & (df['Fecha Ultima Check Real'].dt.isocalendar().year == anio)
                               ]}},
                              {'step':'transform',
                               'func':'drop_columnas',
@@ -225,7 +225,7 @@ config = {'cts':{'requires':{
                               'args':{
      'func': lambda df, semana, anio: df[
          (df['SEM CT'].isna()) &
-         (df['Ultima Actividad Avanzada'] != 'OK CT') &
+         (df['Ultima Actividad Avanzada'] != 'OK CT') & (df['Ultima Actividad Avanzada'] != 'OK CL') &
          (df['Fecha Ultima Check Real'].notna()) &
          (df['Fecha Ultima Check Real'].dt.isocalendar().year == anio)]}},
                              {'step':'report',
@@ -233,20 +233,20 @@ config = {'cts':{'requires':{
                               'args':{
      'func_a': lambda df, semana, anio: df[
          (df['SEM CT'].isna()) &
-         (df['Ultima Actividad Avanzada'] != 'OK CT') &
+         (df['Ultima Actividad Avanzada'] != 'OK CT') & (df['Ultima Actividad Avanzada'] != 'OK CL') &
          (df['Fecha Ultima Check Real'].notna()) &
          (df['Fecha Ultima Check Real'].dt.isocalendar().year == anio)],
      'func_b': lambda df, semana, anio: df[
          (df['Dias Paros'] > 2) &
          (df['SEM CT'].isna()) &
-         (df['Ultima Actividad Avanzada'] != 'OK CT') &
+         (df['Ultima Actividad Avanzada'] != 'OK CT') & (df['Ultima Actividad Avanzada'] != 'OK CL') &
          (df['Fecha Ultima Check Real'].notna()) &
          (df['Fecha Ultima Check Real'].dt.isocalendar().year == anio)
      ]}},
                              {'step':'transform',
                               'func':'filter',
                               'args':{'func': lambda df,semana, anio: df[
-                                  (df['Dias Paros'] > 2) & (df['SEM CT'].isna()) & (df['Ultima Actividad Avanzada'] != 'OK CT') & (df['Fecha Ultima Check Real'].notna()) & (df['Fecha Ultima Check Real'].dt.isocalendar().year == anio)
+                                  (df['Dias Paros'] > 2) & (df['SEM CT'].isna()) & (df['Ultima Actividad Avanzada'] != 'OK CT') & (df['Ultima Actividad Avanzada'] != 'OK CL') & (df['Fecha Ultima Check Real'].notna()) & (df['Fecha Ultima Check Real'].dt.isocalendar().year == anio)
                               ]}},
                              {'step':'transform',
                               'func':'ordenar',
@@ -293,7 +293,7 @@ config = {'cts':{'requires':{
                                       'col_resultado':'TC Pron'}},
                              {'step':'transform',
                               'func':'filter',
-                              'args':{'func': lambda df, semana, anio: df[(df['Ultima Actividad Avanzada'] != 'OK CT') & (df['Fecha Real Ultima Actividad OC'].isna()) &
+                              'args':{'func': lambda df, semana, anio: df[(df['Ultima Actividad Avanzada'] != 'OK CT') & (df['Ultima Actividad Avanzada'] !='OK CL') & (df['Fecha Real Ultima Actividad OC'].isna()) &
                                (df['Sem OC Pron'] == semana) & (df['Fecha Ultima Check Real'].dt.isocalendar().year == anio)]}},
                              {'step':'transform',
                               'func':'ordenar',
@@ -348,7 +348,7 @@ config = {'cts':{'requires':{
                                       'col_resultado':'TC Pron'}},
                              {'step':'transform',
                               'func':'filter',
-                              'args':{'func': lambda df, semana, anio: df[(df['Ultima Actividad Avanzada'] != 'OK CT') & (df['Fecha Real Ultima Actividad AC'].isna()) &
+                              'args':{'func': lambda df, semana, anio: df[(df['Ultima Actividad Avanzada'] != 'OK CT') & (df['Ultima Actividad Avanzada'] !='OK CL') & (df['Fecha Real Ultima Actividad AC'].isna()) &
                                (df['Sem AC Pron'] == semana) & (df['Fecha Ultima Check Real'].dt.isocalendar().year == anio)]}},
                              {'step':'transform',
                               'func':'ordenar',
@@ -403,7 +403,7 @@ config = {'cts':{'requires':{
                                       'col_resultado':'TC Pron'}},
                              {'step':'transform',
                               'func':'filter',
-                              'args':{'func': lambda df, semana,anio: df[(df['Ultima Actividad Avanzada'] != 'OK CT') & (df['Fecha Real Ultima Actividad CT'].isna()) &
+                              'args':{'func': lambda df, semana,anio: df[(df['Ultima Actividad Avanzada'] != 'OK CT') & (df['Ultima Actividad Avanzada'] !='OK CL') & (df['Fecha Real Ultima Actividad CT'].isna()) &
                                (df['Sem CT Pron'] == semana) & (df['Fecha Ultima Check Real'].dt.isocalendar().year == anio)]}},
                              {'step':'transform',
                               'func':'ordenar',
