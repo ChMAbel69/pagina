@@ -25,7 +25,7 @@ columnas_eliminar = {'df_obra_pron':['Fecha Real Inicio OC','Tipo Cimentación',
                    ,'Fecha Dinamica Ultima Actividad AC','KipID','SEM CT','Festivos AC','Clima total CT sin validad','Clima total AC validado','TC Objetivo CT','TC CT'
                    ,'TC General Objetivo','TC General','TC Objetivo dias','Fecha Plan Inicio AC','Dias Acumulados Al Dia de Hoy AC','TC Proyectado CT','Fecha Real Ultima Actividad AC','Sem AC Pron'
                    ,'TC Proyectado','Fecha Proyectada','Dias Restantes','Fecha CT Plan','num sem okct', 'Fecha Real Inicio AC','Sem OC Pron','Clima total AC sin validad']
-          ,'ct_semas':['Fecha Repro Dinamica Dia Ultima Actividad','Fecha Repro Original Ultima Acticidad','Dia Real','Estatus','Estatus Dias','Fecha Plan Inicio OC',
+          ,'ct_semas':['Festivos General','Fecha Repro Dinamica Dia Ultima Actividad','Fecha Repro Original Ultima Acticidad','Dia Real','Estatus','Estatus Dias','Fecha Plan Inicio OC',
                    'Fecha Real Ultima Actividad OC','Fecha Dinamica Ultima Actividad OC','Dias Acumulados Al Dia de Hoy OC','SEM OC','Festivos OC',
                    'Clima Total OC sin validar','Clima Total OC validado','TC Objetivo OC','TC OC','TC Proyectado OC','Fecha Termino Primera Actividad OC','Fecha Termino Ultima Actividad OC'
                    ,'Fecha Real Inicio AC','Fecha Real Ultima Actividad AC','Fecha Dinamica Ultima Actividad AC','Dias Acumulados Al Dia de Hoy AC','SEM AC','Festivos AC',
@@ -113,7 +113,7 @@ config = {'cts':{'requires':{
                              {'step':'transform',
                               'func':'filter',
                               'args':{'func': lambda df, semana, anio: df[
-                                  (df['num sem okct'] == semana) & ((df['Ultima Actividad Avanzada'] == "OK CT") or (df['Ultima Actividad Avanzada'] =='OK CL')) & (df['Fecha Ultima Check Real'].dt.isocalendar().year == anio)
+                                  (df['num sem okct'] == semana) & ((df['Ultima Actividad Avanzada'] == "OK CT") | (df['Ultima Actividad Avanzada'] =='OK CL')) & (df['Fecha Ultima Check Real'].dt.isocalendar().year == anio)
                               ]}},
                              {'step':'transform',
                               'func':'drop_columnas',
